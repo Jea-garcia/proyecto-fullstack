@@ -1,5 +1,6 @@
 package cl.examen.parkingbnb.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class ColorDTO {
     private Integer id;
+    @NotBlank(message = "El nombre del color es obligatorio")
     private String nombre;
 
     public ColorDTO() {}

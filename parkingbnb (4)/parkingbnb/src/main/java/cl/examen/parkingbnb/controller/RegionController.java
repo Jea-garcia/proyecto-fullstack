@@ -9,7 +9,7 @@ import cl.examen.parkingbnb.dto.RegionDTO;
 import cl.examen.parkingbnb.service.IRegionService;
 
 @RestController
-@RequestMapping("/api/region")
+@RequestMapping("/api/crud/region")
 public class RegionController {
     @Autowired
     IRegionService serviceRegion;
@@ -22,5 +22,9 @@ public class RegionController {
     @GetMapping
     public List<RegionDTO> getAll() {
         return serviceRegion.getAll();
+    }
+    @PostMapping
+    public RegionDTO createRegion(@RequestBody RegionDTO regionDTO) {
+        return serviceRegion.save(regionDTO);
     }
 }

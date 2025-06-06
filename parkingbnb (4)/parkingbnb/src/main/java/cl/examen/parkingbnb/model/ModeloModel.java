@@ -17,7 +17,6 @@ public class ModeloModel {
 
     private String nombre;
 
-    // Suponiendo que tienes MarcaModel también mapeado como entidad:
     @ManyToOne
     @JoinColumn(name = "marca_id")
     private MarcaModel marca;

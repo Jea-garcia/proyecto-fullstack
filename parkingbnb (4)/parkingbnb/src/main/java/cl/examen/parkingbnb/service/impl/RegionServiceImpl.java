@@ -30,5 +30,14 @@ public class RegionServiceImpl implements IRegionService {
                        .map(r -> new RegionDTO(r.getId(), r.getNombre()))
                        .collect(Collectors.toList());
     }
+
+    @Override
+    public RegionDTO save(RegionDTO regionDTO) {
+        RegionModel model = new RegionModel();
+        model.setNombre(regionDTO.getNombre());
+
+        RegionModel saved = repositoryRegion.save(model);
+        return new RegionDTO(saved.getId(), saved.getNombre());
+    }
 }
 

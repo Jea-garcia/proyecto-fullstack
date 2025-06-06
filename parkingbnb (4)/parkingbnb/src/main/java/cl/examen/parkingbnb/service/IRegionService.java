@@ -6,4 +6,5 @@ import cl.examen.parkingbnb.dto.RegionDTO;
 public interface IRegionService {
     RegionDTO getById(Integer id);
     List<RegionDTO> getAll();
+    RegionDTO save(RegionDTO regionDTO);
 }

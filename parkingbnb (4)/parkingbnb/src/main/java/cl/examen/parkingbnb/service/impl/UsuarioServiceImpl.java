@@ -50,4 +50,9 @@ public class UsuarioServiceImpl implements IUsuarioService {
                 .map(UsuarioMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+   @Override
+public UsuarioDTO insert(UsuarioDTO usuario) {
+    return save(usuario); // simplemente llama a save para insertar
+}
 }

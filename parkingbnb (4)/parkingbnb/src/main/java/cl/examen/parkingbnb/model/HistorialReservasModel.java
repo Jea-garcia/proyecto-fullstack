@@ -15,12 +15,10 @@ public class HistorialReservasModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Por ejemplo, relación con usuario (cliente)
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private ClienteModel cliente;
 
-    // Relación con reserva
     @ManyToOne
     @JoinColumn(name = "reserva_id")
     private ReservaModel reserva;
@@ -31,5 +29,4 @@ public class HistorialReservasModel {
     @Column(name = "estado")
     private String estado;
 
-    // getters y setters
 }

@@ -18,5 +18,4 @@ public class ComunaModel {
 
     private String nombre;
 
-    // IMPORTANTE: Elimina cualquier método `toEntity()` de aquí si lo tenías antes
 }

@@ -16,4 +16,6 @@ public interface IUsuarioService {
 
     List<UsuarioDTO> getAll();
 
+    Object insert(UsuarioDTO any);
+
 }
