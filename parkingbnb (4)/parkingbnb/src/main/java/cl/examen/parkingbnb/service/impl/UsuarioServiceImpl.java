@@ -55,4 +55,12 @@ public class UsuarioServiceImpl implements IUsuarioService {
 public UsuarioDTO insert(UsuarioDTO usuario) {
     return save(usuario); // simplemente llama a save para insertar
 }
+
+@Override
+public UsuarioDTO login(String username, String password) {
+    return repositoryUsuario.findByUsername(username)
+            .filter(user -> user.getPassword().equals(password)) // acá comparas la contraseña, si usas hash, cambia lógica
+            .map(UsuarioMapper::toDTO)
+            .orElse(null);
+}
 }

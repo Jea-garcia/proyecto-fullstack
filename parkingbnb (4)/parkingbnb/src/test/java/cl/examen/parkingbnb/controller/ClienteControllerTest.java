@@ -141,4 +141,5 @@ public void testInsertCliente_RutVacio_DeberiaRetornarBadRequest() throws Except
             .content(objectMapper.writeValueAsString(cliente)))
             .andExpect(status().isBadRequest());
 }
+
 }

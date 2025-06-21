@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,12 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import cl.examen.parkingbnb.dto.LoginDTO;
 import cl.examen.parkingbnb.dto.UsuarioDTO;
 import cl.examen.parkingbnb.service.IUsuarioService;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/crud/usuario")
+@CrossOrigin(origins = "http://localhost:5173")
 
 public class UsuarioController {
     @Autowired
@@ -54,4 +57,13 @@ public class UsuarioController {
         return serviceUsuario.getAll();
     }
 
+ @PostMapping("/login")
+public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
+    UsuarioDTO usuario = serviceUsuario.login(loginDTO.getUsername(), loginDTO.getPassword());
+    if (usuario == null) {
+        return ResponseEntity.status(401)
+            .body(Collections.singletonMap("error", "Usuario o contraseña incorrectos"));
+    }
+    return ResponseEntity.ok(usuario);
+}
 }

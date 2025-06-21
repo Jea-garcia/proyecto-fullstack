@@ -18,4 +18,7 @@ public interface IUsuarioService {
 
     Object insert(UsuarioDTO any);
 
+    UsuarioDTO login(String username, String password);
+
+
 }
