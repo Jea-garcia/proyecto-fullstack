@@ -1,69 +1,39 @@
 package cl.examen.parkingbnb.controller;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import cl.examen.parkingbnb.dto.LoginDTO;
 import cl.examen.parkingbnb.dto.UsuarioDTO;
 import cl.examen.parkingbnb.service.IUsuarioService;
+
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/crud/usuario")
-@CrossOrigin(origins = "http://localhost:5173")
-
 public class UsuarioController {
-    @Autowired
-    IUsuarioService serviceUsuario;
 
-   @PostMapping
-    public ResponseEntity<Object> insert(@Valid @RequestBody UsuarioDTO usuario) {
-    return ResponseEntity.ok(serviceUsuario.insert(usuario));
+    @Autowired
+    private IUsuarioService usuarioService;
+
+    @PostMapping
+    public ResponseEntity<UsuarioDTO> insert(@Valid @RequestBody UsuarioDTO dto) {
+        return ResponseEntity.ok(usuarioService.insert(dto));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UsuarioDTO>> getAll() {
+        return ResponseEntity.ok(usuarioService.getAll());
     }
 
     @PutMapping("/{id}")
-    public UsuarioDTO update(@PathVariable Integer id, @RequestBody UsuarioDTO usuario) {
-        return serviceUsuario.update(id, usuario);
+    public ResponseEntity<UsuarioDTO> update(@PathVariable Integer id, @RequestBody UsuarioDTO dto) {
+        return ResponseEntity.ok(usuarioService.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
-    public UsuarioDTO delete(@PathVariable Integer id){
-        return serviceUsuario.delete(id);
+    public ResponseEntity<UsuarioDTO> delete(@PathVariable Integer id) {
+        return ResponseEntity.ok(usuarioService.delete(id));
     }
-
-   @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Integer id) {
-    UsuarioDTO usuario = serviceUsuario.getById(id);
-    if (usuario == null) {
-        return ResponseEntity.status(404).body(Collections.singletonMap("message", "Usuario no existe"));
-    }
-    return ResponseEntity.ok(usuario);
-}
-
-    @GetMapping
-    public List<UsuarioDTO>getAll(){
-        return serviceUsuario.getAll();
-    }
-
- @PostMapping("/login")
-public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
-    UsuarioDTO usuario = serviceUsuario.login(loginDTO.getUsername(), loginDTO.getPassword());
-    if (usuario == null) {
-        return ResponseEntity.status(401)
-            .body(Collections.singletonMap("error", "Usuario o contraseña incorrectos"));
-    }
-    return ResponseEntity.ok(usuario);
-}
 }

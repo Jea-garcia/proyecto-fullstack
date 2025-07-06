@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,6 +22,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UsuarioController.class)
+@AutoConfigureMockMvc(addFilters = false) // Para evitar problemas con seguridad
 public class UsuarioControllerTest {
 
     @Autowired
@@ -42,7 +45,7 @@ public class UsuarioControllerTest {
         return usuario;
     }
 
-    @Test // Test para insertar un usuario
+    @Test
     public void testInsertUsuario_OK() throws Exception {
         UsuarioDTO usuario = getUsuarioMock();
         Mockito.when(usuarioService.insert(any(UsuarioDTO.class))).thenReturn(usuario);
@@ -55,7 +58,7 @@ public class UsuarioControllerTest {
                 .andExpect(jsonPath("$.username").value("admin"));
     }
 
-    @Test // Test para insertar un usuario con RUT vacío
+    @Test
     public void testInsertUsuario_RutVacio_BadRequest() throws Exception {
         UsuarioDTO usuario = getUsuarioMock();
         usuario.setRut("");
@@ -67,7 +70,7 @@ public class UsuarioControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test // Test para insertar un usuario con username vacío
+    @Test
     public void testInsertUsuario_UsernameVacio_BadRequest() throws Exception {
         UsuarioDTO usuario = getUsuarioMock();
         usuario.setUsername("");
@@ -79,7 +82,7 @@ public class UsuarioControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test // Test para insertar un usuario con contraseña vacía
+    @Test
     public void testInsertUsuario_EmailInvalido_BadRequest() throws Exception {
         UsuarioDTO usuario = getUsuarioMock();
         usuario.setEmail("correoSinArroba.com");
@@ -91,7 +94,7 @@ public class UsuarioControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    @Test // Test para actualizar un usuario
+    @Test
     public void testGetAllUsuarios() throws Exception {
         UsuarioDTO u1 = getUsuarioMock();
         UsuarioDTO u2 = new UsuarioDTO(2, "11111111-1", "cliente", "123", "CLIENTE", "cliente@correo.com");

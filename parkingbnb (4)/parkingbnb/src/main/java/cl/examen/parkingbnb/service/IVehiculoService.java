@@ -1,19 +1,17 @@
 package cl.examen.parkingbnb.service;
 
 import java.util.List;
-
 import cl.examen.parkingbnb.dto.VehiculoDTO;
 
 public interface IVehiculoService {
 
     VehiculoDTO save(VehiculoDTO vehiculo);
 
-    VehiculoDTO update(String patente, VehiculoDTO vehiculo);
+    VehiculoDTO update(Long id, VehiculoDTO vehiculo);
 
-    VehiculoDTO delete(String patente);
+    VehiculoDTO delete(Long id);
 
-    VehiculoDTO getById(String patente);
+    VehiculoDTO getById(Long id);
 
     List<VehiculoDTO> getAll();
-
 }

@@ -1,11 +1,13 @@
 package cl.examen.parkingbnb.mapper;
 
+import org.springframework.stereotype.Component;
 import cl.examen.parkingbnb.dto.UsuarioDTO;
 import cl.examen.parkingbnb.model.UsuarioModel;
 
+@Component
 public class UsuarioMapper {
 
-    public static UsuarioModel toModel(UsuarioDTO dto) {
+    public UsuarioModel toModel(UsuarioDTO dto) {
         UsuarioModel model = new UsuarioModel();
         model.setId(dto.getId());
         model.setRut(dto.getRut());
@@ -16,7 +18,7 @@ public class UsuarioMapper {
         return model;
     }
 
-    public static UsuarioDTO toDTO(UsuarioModel model) {
+    public UsuarioDTO toDTO(UsuarioModel model) {
         UsuarioDTO dto = new UsuarioDTO();
         dto.setId(model.getId());
         dto.setRut(model.getRut());

@@ -1,41 +1,35 @@
 package cl.examen.parkingbnb.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "vehiculo")
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class VehiculoModel {
 
     @Id
-    @Column(name = "patente")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "vehiculo_seq")
+    @SequenceGenerator(name = "vehiculo_seq", sequenceName = "VEHICULO_SEQ", allocationSize = 1)
+    private Long id;
+
+    @Column(nullable = false)
     private String patente;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_rut")
-    private ClienteModel cliente;
-
-    @Column(name = "marca")
+    @Column(nullable = false)
     private String marca;
 
-    @Column(name = "modelo")
+    @Column(nullable = false)
     private String modelo;
 
-    @Column(name = "color")
-    private String color;
+    @Column(nullable = false)
+    private int anio;
 
-    @Column(name = "tipo")
-    private String tipo;
+    // Relación con Cliente (supongo que un vehículo pertenece a un cliente)
+    @ManyToOne
+    @JoinColumn(name = "cliente_rut", nullable = false)
+    private ClienteModel cliente;
 }

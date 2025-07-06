@@ -13,6 +13,7 @@ import cl.examen.parkingbnb.service.IEstacionamientoService;
 
 @Service
 public class EstacionamientoServiceImpl implements IEstacionamientoService {
+
     @Autowired
     EstacionamientoRepository repositoryEstacionamiento;
 
@@ -25,10 +26,12 @@ public class EstacionamientoServiceImpl implements IEstacionamientoService {
 
     @Override
     public EstacionamientoDTO update(Integer id, EstacionamientoDTO dto) {
-        // Buscar la entidad por id
-        EstacionamientoModel existente = repositoryEstacionamiento.findById(id.longValue()).orElseThrow(() -> new RuntimeException("No existe"));
-        // Actualizar campos con dto
-        existente.setCampo(dto.getCampo());  // Ejemplo, actualizar campos necesarios
+        EstacionamientoModel existente = repositoryEstacionamiento.findById(id.longValue())
+                .orElseThrow(() -> new RuntimeException("No existe"));
+        existente.setUbicacion(dto.getUbicacion());
+        existente.setTipo(dto.getTipo());
+        existente.setEstado(dto.getEstado());
+        existente.setTarifa(dto.getTarifa());
         EstacionamientoModel actualizada = repositoryEstacionamiento.save(existente);
         return entityToDto(actualizada);
     }
@@ -36,7 +39,7 @@ public class EstacionamientoServiceImpl implements IEstacionamientoService {
     @Override
     public EstacionamientoDTO delete(Integer id) {
         EstacionamientoModel entidad = repositoryEstacionamiento.findById(id.longValue())
-                                      .orElseThrow(() -> new RuntimeException("No existe"));
+                .orElseThrow(() -> new RuntimeException("No existe"));
         repositoryEstacionamiento.delete(entidad);
         return entityToDto(entidad);
     }
@@ -44,7 +47,7 @@ public class EstacionamientoServiceImpl implements IEstacionamientoService {
     @Override
     public EstacionamientoDTO getById(Integer id) {
         EstacionamientoModel entidad = repositoryEstacionamiento.findById(id.longValue())
-                                      .orElseThrow(() -> new RuntimeException("No existe"));
+                .orElseThrow(() -> new RuntimeException("No existe"));
         return entityToDto(entidad);
     }
 
@@ -54,20 +57,24 @@ public class EstacionamientoServiceImpl implements IEstacionamientoService {
         return entidades.stream().map(this::entityToDto).collect(Collectors.toList());
     }
 
-    // Métodos de conversión
+    // Conversores
     private EstacionamientoModel dtoToEntity(EstacionamientoDTO dto) {
-        EstacionamientoModel e = new EstacionamientoModel(null, null, null);
-        e.setId(dto.getId());
-        e.setCampo(dto.getCampo());
-        // setear todos los campos necesarios
+        EstacionamientoModel e = new EstacionamientoModel();
+        e.setId(dto.getId() != 0 ? Long.valueOf(dto.getId()) : null);
+        e.setUbicacion(dto.getUbicacion());
+        e.setTipo(dto.getTipo());
+        e.setEstado(dto.getEstado());
+        e.setTarifa(dto.getTarifa());
         return e;
     }
 
     private EstacionamientoDTO entityToDto(EstacionamientoModel e) {
         EstacionamientoDTO dto = new EstacionamientoDTO();
-        dto.setId(e.getId());
-        dto.setCampo(e.getCampo());
-        // setear todos los campos necesarios
+        dto.setId(e.getId() != null ? e.getId().intValue() : 0);
+        dto.setUbicacion(e.getUbicacion());
+        dto.setTipo(e.getTipo());
+        dto.setEstado(e.getEstado());
+        dto.setTarifa(e.getTarifa());
         return dto;
     }
 }

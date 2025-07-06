@@ -1,21 +1,16 @@
 package cl.examen.parkingbnb.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class VehiculoDTO {
+    private Long id;
     private String patente;
-    private ClienteDTO cliente;  
-    private String clienteRut;
     private String marca;
     private String modelo;
-    private String color;
-    private String tipo;
+    private int anio;
+    private String clienteRut;  // para relacionar con cliente
 }
-

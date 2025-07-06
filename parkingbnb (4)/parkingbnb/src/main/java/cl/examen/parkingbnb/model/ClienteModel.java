@@ -12,6 +12,11 @@ import lombok.*;
 public class ClienteModel {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cliente_seq")
+    @SequenceGenerator(name = "cliente_seq", sequenceName = "cliente_seq", allocationSize = 1)
+    @Column(name = "ID", nullable = false)
+    private Long id;
+    
     @Column(name = "rut", nullable = false)
     private String rut;
 
@@ -46,9 +51,7 @@ public class ClienteModel {
     @JoinColumn(name = "ID_COMUNA", nullable = false)
     private ComunaModel comuna;
 
-    public Long getId() {
-        throw new UnsupportedOperationException("Unimplemented method 'getId'");
-    }
+    
 
     
 }

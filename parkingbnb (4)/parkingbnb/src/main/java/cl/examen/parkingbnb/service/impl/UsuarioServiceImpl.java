@@ -14,53 +14,69 @@ import cl.examen.parkingbnb.service.IUsuarioService;
 
 @Service
 public class UsuarioServiceImpl implements IUsuarioService {
+
     @Autowired
-    UsuarioRepository repositoryUsuario;
+    private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private UsuarioMapper usuarioMapper;
 
     @Override
-    public UsuarioDTO save(UsuarioDTO usuario) {
-        UsuarioModel model = UsuarioMapper.toModel(usuario);
-        return UsuarioMapper.toDTO(repositoryUsuario.save(model));
+    public UsuarioDTO insert(UsuarioDTO dto) {
+        UsuarioModel model = usuarioMapper.toModel(dto);
+        UsuarioModel saved = usuarioRepository.save(model);
+        return usuarioMapper.toDTO(saved);
     }
 
     @Override
-    public UsuarioDTO update(Integer id, UsuarioDTO usuario) {
-        UsuarioModel model = UsuarioMapper.toModel(usuario);
-        model.setId(id); // aseguramos que se actualice el correcto
-        return UsuarioMapper.toDTO(repositoryUsuario.save(model));
-    }
-
-    @Override
-    public UsuarioDTO delete(Integer id) {
-        repositoryUsuario.deleteById(id);
-        return null; // podrías devolver el eliminado si lo cargas antes
+    public UsuarioDTO update(Integer id, UsuarioDTO dto) {
+        UsuarioModel existing = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        existing.setRut(dto.getRut());
+        existing.setUsername(dto.getUsername());
+        existing.setPassword(dto.getPassword());
+        existing.setRol(dto.getRol());
+        existing.setEmail(dto.getEmail());
+        UsuarioModel updated = usuarioRepository.save(existing);
+        return usuarioMapper.toDTO(updated);
     }
 
     @Override
     public UsuarioDTO getById(Integer id) {
-        return repositoryUsuario.findById(id)
-                .map(UsuarioMapper::toDTO)
-                .orElse(null);
+        UsuarioModel model = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return usuarioMapper.toDTO(model);
     }
 
     @Override
     public List<UsuarioDTO> getAll() {
-        return repositoryUsuario.findAll()
-                .stream()
-                .map(UsuarioMapper::toDTO)
-                .collect(Collectors.toList());
+        List<UsuarioModel> models = usuarioRepository.findAll();
+        return models.stream().map(usuarioMapper::toDTO).collect(Collectors.toList());
     }
 
-   @Override
-public UsuarioDTO insert(UsuarioDTO usuario) {
-    return save(usuario); // simplemente llama a save para insertar
-}
+    @Override
+    public UsuarioDTO delete(Integer id) {
+        UsuarioModel model = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuarioRepository.delete(model);
+        return usuarioMapper.toDTO(model);
+    }
 
-@Override
-public UsuarioDTO login(String username, String password) {
-    return repositoryUsuario.findByUsername(username)
-            .filter(user -> user.getPassword().equals(password)) // acá comparas la contraseña, si usas hash, cambia lógica
-            .map(UsuarioMapper::toDTO)
+    // Nuevo método para buscar usuario por username
+    @Override
+    public UsuarioDTO findByUsername(String username) {
+        return usuarioRepository.findByUsername(username)
+            .map(usuarioMapper::toDTO)
             .orElse(null);
-}
+    }
+
+    // Implementación simple de login usando findByUsername
+    @Override
+    public UsuarioDTO login(String username, String password) {
+        UsuarioDTO usuario = findByUsername(username);
+        if (usuario == null || !usuario.getPassword().equals(password)) {
+            return null;
+        }
+        return usuario;
+    }
 }

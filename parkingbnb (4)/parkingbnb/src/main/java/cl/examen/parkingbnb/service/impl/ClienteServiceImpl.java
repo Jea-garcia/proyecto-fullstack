@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class ClienteServiceImpl implements IClienteService {
 
     @Override
     public ClienteDTO update(String rut, ClienteDTO clienteDTO) {
-        Optional<ClienteModel> existingOpt = repository.findById(rut);
+        Optional<ClienteModel> existingOpt = repository.findByRut(rut);
         if (existingOpt.isPresent()) {
             ClienteModel existing = existingOpt.get();
             existing.setDv(clienteDTO.getDv());
@@ -42,10 +43,10 @@ public class ClienteServiceImpl implements IClienteService {
             existing.setDireccion(clienteDTO.getDireccion());
             existing.setEmail(clienteDTO.getEmail());
 
-           if (clienteDTO.getFechaNacimiento() != null && !clienteDTO.getFechaNacimiento().isEmpty()) {
-    LocalDate localDate = LocalDate.parse(clienteDTO.getFechaNacimiento(), FORMATTER);
-    existing.setFechaNac(localDate);
-}
+            if (clienteDTO.getFechaNacimiento() != null && !clienteDTO.getFechaNacimiento().isEmpty()) {
+                LocalDate localDate = LocalDate.parse(clienteDTO.getFechaNacimiento(), FORMATTER);
+                existing.setFechaNac(localDate);
+            }
 
             existing.setTelefono(clienteDTO.getTelefono());
             existing.setCelular(clienteDTO.getCelular());
@@ -64,10 +65,10 @@ public class ClienteServiceImpl implements IClienteService {
 
     @Override
     public ClienteDTO delete(String rut) {
-        Optional<ClienteModel> existingOpt = repository.findById(rut);
+        Optional<ClienteModel> existingOpt = repository.findByRut(rut);
         if (existingOpt.isPresent()) {
             ClienteModel cliente = existingOpt.get();
-            repository.deleteById(rut);
+            repository.delete(cliente);
             return mapToDTO(cliente);
         }
         return null;
@@ -75,12 +76,12 @@ public class ClienteServiceImpl implements IClienteService {
 
     @Override
     public ClienteDTO getByRut(String rut) {
-        return repository.findById(rut).map(this::mapToDTO).orElse(null);
+        return repository.findByRut(rut).map(this::mapToDTO).orElse(null);
     }
 
     @Override
     public List<ClienteDTO> getAll() {
-        return repository.findAll().stream().map(this::mapToDTO).toList();
+        return repository.findAll().stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     private ClienteModel mapToEntity(ClienteDTO dto) {
@@ -94,9 +95,10 @@ public class ClienteServiceImpl implements IClienteService {
         entity.setEmail(dto.getEmail());
 
         if (dto.getFechaNacimiento() != null && !dto.getFechaNacimiento().isEmpty()) {
-    LocalDate localDate = LocalDate.parse(dto.getFechaNacimiento(), FORMATTER);
-    entity.setFechaNac(localDate);
-}   
+            LocalDate localDate = LocalDate.parse(dto.getFechaNacimiento(), FORMATTER);
+            entity.setFechaNac(localDate);
+        }
+
         entity.setTelefono(dto.getTelefono());
         entity.setCelular(dto.getCelular());
 
@@ -111,6 +113,7 @@ public class ClienteServiceImpl implements IClienteService {
 
     private ClienteDTO mapToDTO(ClienteModel entity) {
         if (entity == null) return null;
+
         ClienteDTO dto = new ClienteDTO();
         dto.setRut(entity.getRut());
         dto.setDv(entity.getDv());
@@ -120,9 +123,10 @@ public class ClienteServiceImpl implements IClienteService {
         dto.setDireccion(entity.getDireccion());
         dto.setEmail(entity.getEmail());
 
-    if (entity.getFechaNac() != null) {
-    dto.setFechaNacimiento(entity.getFechaNac().format(FORMATTER));
-}
+        if (entity.getFechaNac() != null) {
+            dto.setFechaNacimiento(entity.getFechaNac().format(FORMATTER));
+        }
+
         dto.setTelefono(entity.getTelefono());
         dto.setCelular(entity.getCelular());
 
@@ -132,6 +136,7 @@ public class ClienteServiceImpl implements IClienteService {
             comunaDTO.setNombre(entity.getComuna().getNombre());
             dto.setComuna(comunaDTO);
         }
+
         return dto;
     }
 }
